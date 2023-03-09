@@ -1,0 +1,22 @@
+Metadata-Version: 2.1
+Name: hamilton-ice
+Version: 0.0+none
+Summary: An ML training/serving pipeline framework
+Home-page: https://pyscaffold.org/
+Author: Justin Donaldson
+Author-email: jdonaldson@gmail.com
+License: mit
+Platform: any
+Classifier: Development Status :: 4 - Beta
+Classifier: Programming Language :: Python
+Provides-Extra: ALL
+Provides-Extra: testing
+License-File: LICENSE.txt
+License-File: AUTHORS.rst
+
+
+===============================
+Hamilton on Ice
+===============================
+
+

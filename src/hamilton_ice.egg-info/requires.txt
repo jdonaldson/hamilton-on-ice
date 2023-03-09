@@ -1,0 +1,12 @@
+smart-open==1.9.0
+jsonlines
+
+[ALL]
+flask
+fastavro
+apache-airflow
+jsonlines
+
+[testing]
+pytest
+pytest-cov
