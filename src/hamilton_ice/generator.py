@@ -26,26 +26,26 @@ The generator function accepts three arguments :
 """
 GeneratorT = Callable[[bool, bool, Dict[str, Any]], Type]
 
-def build_artifact_accessor(obj: object, fn_name: str):
+def build_beacon_accessor(obj: object, fn_name: str):
     """
-    builds a simple accessor for artifacts for the given object and fn_name.
-    The artifact accessor enables the retrieval of an artifact without having
+    builds a simple accessor for beacons for the given object and fn_name.
+    The beacon accessor enables the retrieval of a beacon without having
     to iterate through a generator
     """
 
     func = getattr(obj, fn_name)
-    def artifact_accessor():
-        if not hasattr(func, "_artifact"):
-            func._artifact = next(func.generator())
-        return func._artifact
-    return artifact_accessor
+    def beacon_accessor():
+        if not hasattr(func, "_beacon"):
+            func._beacon = next(func.generator())
+        return func._beacon
+    return beacon_accessor
 
-def build_artifact_generator(obj: object, fn_name: str) \
+def build_beacon_generator(obj: object, fn_name: str) \
         -> GeneratorT:
     """
-    build a simple generator for artifacts given an object and a function name
+    build a simple generator for beacons given an object and a function name
     on the given object.  The generator function accepts two parameters related
-    to saving/loading output.  However, for artifacts these are ignored.
+    to saving/loading output.  However, for beacons these are ignored.
     """
     func = getattr(obj, fn_name)
 
@@ -54,7 +54,7 @@ def build_artifact_generator(obj: object, fn_name: str) \
     zip_args = zip(*value_generators)
 
 
-    def create_artifact():
+    def create_beacon():
         if not varnames:
             return func()
         args = next(zip_args)
@@ -62,19 +62,19 @@ def build_artifact_generator(obj: object, fn_name: str) \
         return func(**kwargs)
 
 
-    def artifact_generator(_=None, __=None, ___=None):
+    def beacon_generator(_=None, __=None, ___=None):
         """See GeneratorT docs"""
 
-        if not hasattr(func, '_artifact'):
-            func._artifact = create_artifact()
+        if not hasattr(func, '_beacon'):
+            func._beacon = create_beacon()
 
-        if isinstance(func._artifact, GeneratorType):
-          raise ValueError("The artifact '%s.%s' should not be a generator" % (obj.__name__, fn_name) )
+        if isinstance(func._beacon, GeneratorType):
+          raise ValueError("The beacon '%s.%s' should not be a generator" % (obj.__name__, fn_name) )
         else:
           while True:
-              yield func._artifact
+              yield func._beacon
 
-    return artifact_generator
+    return beacon_generator
 
 
 def build_source_generator(obj: object, fn_name: str) -> GeneratorT:
@@ -103,7 +103,7 @@ def check_valid(obj, fn_name, gen_name, ancestors):
     varnames = inspect.getfullargspec(func).args
     for v in varnames:
         check_valid(obj, v, fn_name, ancestors)
-    if "is_artifact" not in func.__dict__:
+    if "is_beacon" not in func.__dict__:
         ancestors.append(fn_name)
     return True
 
@@ -149,16 +149,16 @@ def build_generator(obj: object, fn_name: str) -> GeneratorT:
         zip_args = zip(*value_generators)
 
         def is_infinite(varname):
-            # generators for artifacts repeat return values over and over
-            # in this case, _artifact will be a static value,
+            # generators for beacons repeat return values over and over
+            # in this case, _beacon will be a static value,
             # instead of a generator
             attr = getattr(obj, varname)
-            if hasattr(attr, "_artifact"):
-              return not isinstance(getattr(attr, "_artifact"), GeneratorType)
+            if hasattr(attr, "_beacon"):
+              return not isinstance(getattr(attr, "_beacon"), GeneratorType)
 
         if not varnames:
             raise ValueError('''
-                Empty arg functions like %s() should be artifacts or sources
+                Empty arg functions like %s() should be beacons or sources
                 ''' % fn_name)
 
         for args in zip_args:

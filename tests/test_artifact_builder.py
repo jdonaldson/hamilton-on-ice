@@ -1,41 +1,41 @@
 # -*- coding: utf-8 -*-
 
-from hamilton_ice.generator import build_artifact_generator
-from hamilton_ice.io.artifact import artifact, ArtifactIO
+from hamilton_ice.generator import build_beacon_generator
+from hamilton_ice.io.beacon import beacon, BeaconIO
 
-from hamilton_ice.pipeline import build_pipeline, reset_artifacts
+from hamilton_ice.pipeline import build_pipeline, reset_beacons
 
 
-class ExampleArtifactClass:
-    @artifact
+class ExampleBeaconClass:
+    @beacon
     def params():
         return {'config': 'value_from_params'}
 
-    @artifact
+    @beacon
     def config(params):
         return params['config']
 
 
-build_pipeline(ExampleArtifactClass)
+build_pipeline(ExampleBeaconClass)
 
 
-def test_artifact_created():
-    artf = ExampleArtifactClass.params.artifact()
+def test_beacon_created():
+    artf = ExampleBeaconClass.params.beacon()
     config = artf['config']
     assert config == "value_from_params"
 
 
-def test_artifact_multiple_reset():
+def test_beacon_multiple_reset():
     try:
-        reset_artifacts(ExampleArtifactClass)
-        reset_artifacts(ExampleArtifactClass)
+        reset_beacons(ExampleBeaconClass)
+        reset_beacons(ExampleBeaconClass)
     except ValueError as e:
         assert False
     assert True
 
-def test_artifact_reset():
-    config = ExampleArtifactClass.config.artifact()
+def test_beacon_reset():
+    config = ExampleBeaconClass.config.beacon()
     assert config == "value_from_params"
-    assert hasattr(ExampleArtifactClass.config, "_artifact")
-    reset_artifacts(ExampleArtifactClass)
-    assert not hasattr(ExampleArtifactClass.config, "_artifact")
+    assert hasattr(ExampleBeaconClass.config, "_beacon")
+    reset_beacons(ExampleBeaconClass)
+    assert not hasattr(ExampleBeaconClass.config, "_beacon")

@@ -2,7 +2,7 @@
 
 import os
 
-from hamilton_ice.io.artifact import artifact
+from hamilton_ice.io.beacon import beacon
 from hamilton_ice.io.pandas import pandas_csv_source, pandas_msgpack
 from hamilton_ice.pipeline import build_pipeline
 
@@ -27,7 +27,7 @@ def write_test_data():
 # write_test_data()
 
 class ExampleCsvClass:
-    @artifact
+    @beacon
     def params():
         return local_params
 

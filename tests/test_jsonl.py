@@ -3,7 +3,7 @@
 import os
 
 from hamilton_ice.generator import build_source_generator, build_generator
-from hamilton_ice.io.artifact import artifact
+from hamilton_ice.io.beacon import beacon
 from hamilton_ice.io.jsonl import jsonl_source, jsonl
 
 
@@ -15,7 +15,7 @@ local_params = {
 
 
 class ExampleJsonlClass:
-    @artifact
+    @beacon
     def params():
         return local_params
 

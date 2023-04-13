@@ -1,12 +1,12 @@
 """
-The Artifact class is a very limited version of a hamilton_ice IO method.
-Artifacts invoke their functions once, and then yield the value indefinitely.
+The Beacon class is a very limited version of a hamilton_ice IO method.
+Beacons invoke their functions once, and then yield the value indefinitely.
 """
 from hamilton_ice.io.dummy import DummyDumper
 from hamilton_ice.io.base import BaseLoader, BaseIO
 
 
-class ArtifactLoader(BaseLoader):
+class BeaconLoader(BaseLoader):
     def __init__(self, func):
         self.func = func
 
@@ -17,16 +17,16 @@ class ArtifactLoader(BaseLoader):
         return True
 
 
-class ArtifactIO(BaseIO):
+class BeaconIO(BaseIO):
     def loader(self):
-        return ArtifactLoader(self.fn)
+        return BeaconLoader(self.fn)
 
     def dumper(self):
         return DummyDumper()
 
 
-def artifact(func):
-    func.io = ArtifactIO
-    func.is_artifact = True
+def beacon(func):
+    func.io = BeaconIO 
+    func.is_beacon = True
     func = staticmethod(func)
     return func

@@ -8,7 +8,7 @@ def dag_plot(obj):
 
     for node in io_nodes:
         field = getattr(obj, node)
-        if hasattr(field, 'is_artifact'):
+        if hasattr(field, 'is_beacon'):
             dot.node(node, style="filled", color="lightgrey")
         elif hasattr(field, 'is_source'):
             dot.node(node, style="filled", color="green")

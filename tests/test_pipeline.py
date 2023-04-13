@@ -1,20 +1,20 @@
 # -*- coding: utf-8 -*-
 
 from hamilton_ice.pipeline import get_func_args, object_io_nodes, build_pipeline
-from hamilton_ice.io.artifact import artifact
+from hamilton_ice.io.beacon import beacon
 from hamilton_ice.io.jsonl import jsonl_source, jsonl
 
 
 class Example:
-    @artifact
+    @beacon
     def foo(bar, baz):
         return {"bar": bar["bar"], "baz": baz["baz"]}
 
-    @artifact
+    @beacon
     def bar():
         return {"bar": 1}
 
-    @artifact
+    @beacon
     def baz():
         return {"baz": 2}
 
@@ -58,7 +58,7 @@ def test_build_pipeline():
     assert(not hasattr(Example.bing, "generator"))
 
 
-def test_simple_artifact_pipeline():
+def test_simple_beacon_pipeline():
     result = next(Example.foo.generator())
     assert(result["bar"] == 1)
     assert(result["baz"] == 2)

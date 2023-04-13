@@ -3,7 +3,7 @@ import inspect
 from .util.clazz import get_field_attr, has_field_attr
 from .util.dag import topo_sort
 from .generator import build_generator, build_source_generator, \
-        build_artifact_generator, build_artifact_accessor
+        build_beacon_generator, build_beacon_accessor
 
 
 def get_func_args(obj, field):
@@ -34,17 +34,17 @@ def object_io_nodes(obj):
     return topo_sort(io_nodes, lambda node: get_func_args(obj, node))
 
 
-def reset_artifacts(obj):
+def reset_beacons(obj):
     """
-    Resets all artifacts in the given pipeline (forcing them to be recreated)
+    Resets all beacons in the given pipeline (forcing them to be recreated)
     """
     modified = False
     for node in object_io_nodes(obj):
         fn = getattr(obj, node)
-        if has_field_attr(obj, node, 'is_artifact') \
-                and has_field_attr(obj, node, "_artifact"):
+        if has_field_attr(obj, node, 'is_beacon') \
+                and has_field_attr(obj, node, "_beacon"):
                     modified = True
-                    del fn._artifact
+                    del fn._beacon
     if modified:
         build_pipeline(obj)
 
@@ -54,7 +54,7 @@ def build_pipeline(obj):
     Build all necessary IO fields on a pipeline object.
     This process involves iterating through the object fields, finding the
     methods with IO decorators, determining the type of generator function to
-    apply (e.g. source/artifact/default), and building the function for the
+    apply (e.g. source/beacon/default), and building the function for the
     field's 'generator' attribute.
     """
     io_nodes = object_io_nodes(obj)
@@ -72,8 +72,8 @@ def build_pipeline(obj):
         if has_field_attr(obj, node, 'is_source'):
             fn.location_generator = build_generator(obj, node)
             fn.generator = build_source_generator(obj, node)
-        elif has_field_attr(obj, node, 'is_artifact'):
-            fn.generator = build_artifact_generator(obj, node)
-            fn.artifact = build_artifact_accessor(obj, node)
+        elif has_field_attr(obj, node, 'is_beacon'):
+            fn.generator = build_beacon_generator(obj, node)
+            fn.beacon = build_beacon_accessor(obj, node)
         else:
             fn.generator = build_generator(obj, node)

@@ -18,7 +18,7 @@ def evaluation_data(batch: pd.DataFrame) -> pd.DataFrame:
     return batch[batch["eval"]].drop(["train", "eval"], axis=1).copy()
 
 
-@tag(feedback="validation_data", ice_equivalent="artifact")
+@tag(feedback="validation_data", ice_equivalent="beacon")
 def base_validation_data(training_data: pd.DataFrame) -> pd.DataFrame:
     """This is the 'base' validation data. The validation_data actually modifies this, and that
     value overrides it."""
@@ -50,7 +50,7 @@ def validation_data(
     return base_validation_data
 
 
-@tag(feedback="output_model", ice_equivalent="artifact")
+@tag(feedback="output_model", ice_equivalent="beacon")
 def model(training_data: pd.DataFrame) -> torch.nn.Sequential:
     """Basic function to create a model. This should only be called once."""
     n_features = training_data.drop(["survived"], axis=1).shape[1]
@@ -61,7 +61,7 @@ def model(training_data: pd.DataFrame) -> torch.nn.Sequential:
     return model
 
 
-@tag(feedback="criterion", ice_equivalent="artifact")
+@tag(feedback="criterion", ice_equivalent="beacon")
 def criterion() -> torch.nn.Module:
     """Loss calculator, only created once (and cached).
 
@@ -70,7 +70,7 @@ def criterion() -> torch.nn.Module:
     return torch.nn.BCELoss()
 
 
-@tag(feedback="output_optimizer", ice_equivalent="artifact")
+@tag(feedback="output_optimizer", ice_equivalent="beacon")
 def optimizer(model: torch.nn.Sequential) -> torch.optim.Adam:
     """Optimizer, only created once and cached.
 
